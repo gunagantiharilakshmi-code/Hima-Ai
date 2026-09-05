@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.animate-indeterminate {
+  animation: indeterminate 1.5s infinite ease-in-out;
+}
+
+/* Botpress Webchat Embedded Container Styling */
+#hima-botpress-webchat-container {
+  min-height: 560px;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+#hima-botpress-webchat-container .bpEmbeddedWebchat {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 560px !important;
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#hima-botpress-webchat-container iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+}

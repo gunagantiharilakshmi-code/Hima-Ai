@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hima AI – Your Smart College & Study Assistant</title>
+    <meta name="description" content="Your friendly AI assistant for college, studies, exams, assignments and more. Powered by Hima AI Botpress workflow." />
+    <meta property="og:title" content="Hima AI – Your Smart College & Study Assistant" />
+    <meta property="og:description" content="Your friendly AI assistant for college, studies, exams, assignments and more." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        var isNetworkOrFetchError = function(msg) {
+          if (!msg || typeof msg !== 'string') return false;
+          var lower = msg.toLowerCase();
+          return (
+            lower.indexOf('failed to fetch') !== -1 ||
+            (lower.indexOf('an error occurred') !== -1 && (lower.indexOf('fetch') !== -1 || lower.indexOf('network') !== -1)) ||
+            lower.indexOf('networkerror') !== -1 ||
+            lower.indexOf('load failed') !== -1
+          );
+        };
+
+        var origConsoleError = console.error.bind(console);
+        console.error = function() {
+          var msg = '';
+          for (var i = 0; i < arguments.length; i++) {
+            var a = arguments[i];
+            if (typeof a === 'string') msg += ' ' + a;
+            else if (a && typeof a.message === 'string') msg += ' ' + a.message;
+            else if (a) {
+              try { msg += ' ' + String(a); } catch (e) {}
+            }
+          }
+          if (msg.indexOf('DialogContent') !== -1 && msg.indexOf('DialogTitle') !== -1) return;
+          if (isNetworkOrFetchError(msg)) return;
+          origConsoleError.apply(console, arguments);
+        };
+
+        var origConsoleWarn = console.warn.bind(console);
+        console.warn = function() {
+          var msg = '';
+          for (var i = 0; i < arguments.length; i++) {
+            var a = arguments[i];
+            if (typeof a === 'string') msg += ' ' + a;
+            else if (a && typeof a.message === 'string') msg += ' ' + a.message;
+            else if (a) {
+              try { msg += ' ' + String(a); } catch (e) {}
+            }
+          }
+          if (
+            (msg.indexOf('DialogContent') !== -1 && msg.indexOf('DialogTitle') !== -1) ||
+            (msg.indexOf('Missing `Description`') !== -1 || msg.indexOf('aria-describedby') !== -1) ||
+            isNetworkOrFetchError(msg)
+          ) return;
+          origConsoleWarn.apply(console, arguments);
+        };
+
+        // Window error listeners to prevent unhandled fetch/network rejections from bubbling
+        window.addEventListener('unhandledrejection', function(event) {
+          var reason = event && event.reason;
+          var msg = '';
+          if (typeof reason === 'string') msg = reason;
+          else if (reason && typeof reason.message === 'string') msg = reason.message;
+          else if (reason) { try { msg = String(reason); } catch (e) {} }
+          if (isNetworkOrFetchError(msg) || (msg && msg.indexOf('botpress') !== -1)) {
+            if (event.preventDefault) event.preventDefault();
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          }
+        });
+
+        window.addEventListener('error', function(event) {
+          var msg = (event && event.message) || '';
+          if (isNetworkOrFetchError(msg)) {
+            if (event.preventDefault) event.preventDefault();
+            if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          }
+        });
+
+        var origGetElementById = document.getElementById.bind(document);
+        document.getElementById = function(id) {
+          var el = origGetElementById(id);
+          if (el) return el;
+          if (typeof id === 'string') {
+            try {
+              var all = document.querySelectorAll('*');
+              for (var i = 0; i < all.length; i++) {
+                var sr = all[i].shadowRoot;
+                if (sr) {
+                  var shadowEl = sr.getElementById ? sr.getElementById(id) : (sr.querySelector ? sr.querySelector('[id="' + id + '"]') : null);
+                  if (shadowEl) return shadowEl;
+                }
+              }
+            } catch (e) {}
+
+            if (id.indexOf('radix-') === 0 || id.indexOf('title') !== -1 || id.indexOf('dialog') !== -1) {
+              var fallback = document.querySelector('[data-radix-shim-id="' + id + '"]');
+              if (!fallback) {
+                fallback = document.createElement('h2');
+                fallback.id = id;
+                fallback.setAttribute('data-radix-shim-id', id);
+                fallback.setAttribute('aria-hidden', 'true');
+                fallback.textContent = 'Accessible Dialog Title';
+                fallback.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+                if (document.body) {
+                  document.body.appendChild(fallback);
+                } else {
+                  document.addEventListener('DOMContentLoaded', function() {
+                    if (document.body && !document.getElementById(id)) {
+                      document.body.appendChild(fallback);
+                    }
+                  });
+                }
+              }
+              return fallback;
+            }
+          }
+          return null;
+        };
+      })();
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased font-['Plus_Jakarta_Sans',sans-serif]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

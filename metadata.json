@@ -1,0 +1,6 @@
+{
+  "name": "Hima AI",
+  "description": "Your Smart College & Study Assistant - dedicated frontend portal with study planner, exams, assignments, college info, resources, and official Botpress Webchat embed.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
